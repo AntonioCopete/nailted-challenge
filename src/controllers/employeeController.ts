@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response } from "express";
+import { Request, Response } from "express";
 import Employee from "../models/Employee";
 import { Query } from "express-serve-static-core";
 
@@ -11,7 +11,7 @@ interface IQueryParams {
 }
 
 export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) => {
-    const { page, sort, filter }: IQueryParams = req.query;
+    const { page, sort, filter } = req.query;
 
     const employees = Employee.find(page, sort, filter);
 
@@ -25,4 +25,10 @@ export const createEmployee = async (req: Request, res: Response) => {
     Employee.create({ name, surname, address, phone, email, birthdate });
 
     res.status(200).json({ msg: "Created" });
+};
+
+export const getEmployeeById = async (req: Request, res: Response) => {
+    const employee = Employee.findById(req.params.id);
+
+    return res.status(200).json({ employee });
 };

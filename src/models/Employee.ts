@@ -24,32 +24,40 @@ const Employee = {
         fs.appendFileSync("./src/db/employees.txt", "\n" + stringEmployee);
     },
     find: function (page: string = "1", sort: string, filter: string) {
-        const file = fs.readFileSync("./src/db/employees.txt");
-
-        let employees: IEmployee[] = file
-            .toString()
-            .split("\n")
-            .map((textLine) => {
-                const employee = textLine.split(",");
-
-                const [id, name, surname, address, phone, email, birthdate] = employee;
-
-                return { id, name, surname, address, phone, email, birthdate };
-            });
+        let employees: IEmployee[] = this.findAll();
 
         if (filter) {
             employees = employees.filter((employee: IEmployee) => employee.email.includes(filter));
         }
 
         if (sort === "name" || sort === "surname") {
-            console.log(sort);
-
-            employees.sort((a: any, b: any) => a[sort].localeCompare(b[sort]));
+            employees.sort((a: IEmployee, b: IEmployee) => a[sort].localeCompare(b[sort]));
         }
 
         employees = employees.slice(parseInt(page) * 5 - 5, parseInt(page) * 5);
 
         return employees;
+    },
+
+    findById: function (id: string) {
+        const employees: IEmployee[] = this.findAll();
+
+        return employees.find((employee) => employee.id === id);
+    },
+
+    findAll: function () {
+        const file = fs.readFileSync("./src/db/employees.txt");
+
+        return file
+            .toString()
+            .split("\n")
+            .map((textLine: string) => {
+                const employee = textLine.split(",");
+
+                const [id, name, surname, address, phone, email, birthdate] = employee;
+
+                return { id, name, surname, address, phone, email, birthdate };
+            });
     },
 };
 
