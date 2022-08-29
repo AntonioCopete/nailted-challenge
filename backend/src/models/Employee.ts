@@ -3,10 +3,10 @@ interface IEmployee {
     id?: string;
     name: string;
     surname: string;
-    address: string;
-    phone: string;
+    address?: string;
+    phone?: string;
     email: string;
-    birthdate: string;
+    birthdate?: string;
 }
 
 const Employee = {
@@ -58,7 +58,15 @@ const Employee = {
 
                 const [id, name, surname, address, phone, email, birthdate] = employee;
 
-                return { id, name, surname, address, phone, email, birthdate };
+                return {
+                    id,
+                    name,
+                    surname,
+                    // address: address.slice(1, address.length - 1),
+                    // phone,
+                    email: email.toLowerCase(),
+                    // birthdate,
+                };
             });
     },
 };
