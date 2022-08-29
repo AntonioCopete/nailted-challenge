@@ -34,9 +34,11 @@ const Employee = {
             employees.sort((a: IEmployee, b: IEmployee) => a[sort].localeCompare(b[sort]));
         }
 
+        const nextPage = employees.length - 5 * parseInt(page) > 1;
+
         employees = employees.slice(parseInt(page) * 5 - 5, parseInt(page) * 5);
 
-        return employees;
+        return { employees, nextPage };
     },
 
     findById: function (id: string) {

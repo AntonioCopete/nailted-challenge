@@ -13,9 +13,9 @@ interface IQueryParams {
 export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) => {
     const { page, sort, filter } = req.query;
 
-    const employees = Employee.find(page, sort, filter);
+    const { employees, nextPage } = Employee.find(page, sort, filter);
 
-    return res.status(200).json({ employees });
+    return res.status(200).json({ employees, nextPage });
 };
 
 export const createEmployee = async (req: Request, res: Response) => {
