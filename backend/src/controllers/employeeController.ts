@@ -24,7 +24,7 @@ export const createEmployee = async (req: Request, res: Response) => {
 
     Employee.create({ name, surname, address, phone, email, birthdate });
 
-    res.status(200).json({ msg: "Created" });
+    res.status(201).json({ msg: "Created" });
 };
 
 export const getEmployeeById = async (req: Request, res: Response) => {

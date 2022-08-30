@@ -13,6 +13,9 @@ const reducer = (state, action) => {
                 ...state,
                 employees: action.payload,
             };
+
+        default:
+            return state;
     }
 };
 

@@ -18,7 +18,15 @@ const Employee = {
         const newId = parseInt(lastId) + 1;
 
         // Sorting and formatting employee data before creating a new employee
-        const newEmployee = { newId, name, surname, address, phone, email, birthdate };
+        const newEmployee = {
+            newId,
+            name,
+            surname,
+            address: '"' + address + '"',
+            phone: phone?.slice(0, 3) + "-" + phone?.slice(3, 6) + "-" + phone?.slice(6),
+            email,
+            birthdate,
+        };
         const stringEmployee: string = Object.values(newEmployee).join(",");
 
         fs.appendFileSync("./src/db/employees.txt", "\n" + stringEmployee);
@@ -42,9 +50,24 @@ const Employee = {
     },
 
     findById: function (id: string) {
-        const employees: IEmployee[] = this.findAll();
+        const fileArr = fs.readFileSync("./src/db/employees.txt").toString().split("\n");
 
-        return employees.find((employee) => employee.id === id);
+        const foundLine = fileArr.find((fileLine: any) => fileLine.slice(0, id.length) === id);
+
+        if (foundLine) {
+            const [id, name, surname, address, phone, email, birthdate] = foundLine;
+            return {
+                id,
+                name,
+                surname,
+                address: address.slice(1, address.length - 1),
+                phone,
+                email: email.toLowerCase(),
+                birthdate,
+            };
+        } else {
+            return false;
+        }
     },
 
     findAll: function () {
@@ -54,18 +77,15 @@ const Employee = {
             .toString()
             .split("\n")
             .map((textLine: string) => {
-                const employee = textLine.split(",");
+                const employeeLine = textLine.split(",");
 
-                const [id, name, surname, address, phone, email, birthdate] = employee;
+                const [id, name, surname, address, phone, email, birthdate] = employeeLine;
 
                 return {
                     id,
                     name,
                     surname,
-                    // address: address.slice(1, address.length - 1),
-                    // phone,
                     email: email.toLowerCase(),
-                    // birthdate,
                 };
             });
     },

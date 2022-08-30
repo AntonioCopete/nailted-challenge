@@ -1,4 +1,5 @@
-import { Table as ReactTable } from "react-bootstrap";
+import { Button, Table as ReactTable } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 interface TableProps {
     columns: string[];
@@ -7,21 +8,35 @@ interface TableProps {
 
 const Table = ({ columns, rows }: TableProps) => {
     return (
-        <ReactTable striped bordered hover>
+        <ReactTable striped bordered hover className="text-center w-100">
             <thead>
                 <tr>
                     {columns.map((column: string, idx: number) => {
-                        return <th key={idx}>{column}</th>;
+                        return (
+                            <th className="py-2" key={idx}>
+                                {column}
+                            </th>
+                        );
                     })}
+                    <th className="py-2"></th>
                 </tr>
             </thead>
             <tbody>
-                {rows.map((row: any, idxr: number) => {
+                {rows.map((row: string[], idxr: number) => {
                     return (
                         <tr key={idxr}>
-                            {row.map((value: any, idxv: number) => {
-                                return <td key={idxv}>{value}</td>;
+                            {row.map((value: string, idxv: number) => {
+                                return (
+                                    <td className="p-2 align-middle" key={idxv}>
+                                        {value}
+                                    </td>
+                                );
                             })}
+                            <td>
+                                <Link to={`/employee=${row[0]}`}>
+                                    <Button variant="primary">Show</Button>
+                                </Link>
+                            </td>
                         </tr>
                     );
                 })}
