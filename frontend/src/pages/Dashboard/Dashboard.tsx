@@ -77,32 +77,6 @@ const Home = () => {
 
     return (
         <>
-            <div className="container px-0 py-2">
-                <div className="row m-0 p-0 justify-content-between">
-                    <div className="col-5 p-0">
-                        <Form.Control
-                            onChange={handleSearch}
-                            type="text"
-                            id="search-email"
-                            placeholder="Search email"
-                        />
-                    </div>
-                    <div className="col-5 p-0">
-                        <Form.Select onChange={handleSort} id="filter" defaultValue="title">
-                            <option value="title" disabled>
-                                Sort by
-                            </option>
-                            <option value="id">None</option>
-                            <option value="name">Name</option>
-                            <option value="surname">Surname</option>
-                        </Form.Select>
-                    </div>
-                    <Button variant="success" className="col-1 p-0" onClick={() => setShowModal(true)}>
-                        Add
-                    </Button>
-                </div>
-            </div>
-
             <Modal centered show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>New employee</Modal.Title>
@@ -135,6 +109,31 @@ const Home = () => {
 
             {employees.length > 0 && (
                 <>
+                    <div className="row justify-content-between my-2">
+                        <div className="col-5">
+                            <Form.Control
+                                onChange={handleSearch}
+                                type="text"
+                                id="search-email"
+                                placeholder="Search email"
+                            />
+                        </div>
+                        <div className="col-5">
+                            <Form.Select onChange={handleSort} id="filter" defaultValue="title">
+                                <option value="title" disabled>
+                                    Sort by
+                                </option>
+                                <option value="id">None</option>
+                                <option value="name">Name</option>
+                                <option value="surname">Surname</option>
+                            </Form.Select>
+                        </div>
+                        <div className="col-1 d-flex justify-content-end">
+                            <Button variant="success" onClick={() => setShowModal(true)}>
+                                Add
+                            </Button>
+                        </div>
+                    </div>
                     <Table
                         columns={Object.keys(employees[0])}
                         rows={employees.map((employeePropValues: Employee) => Object.values(employeePropValues))}

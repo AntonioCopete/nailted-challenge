@@ -5,14 +5,10 @@ const Layout = () => {
     return (
         <>
             <Header />
-            <div className="d-flex">
-                <aside className="col-2 pt-3">
-                    <Menu />
-                </aside>
-                <main className="col-10 mx-auto">
-                    <Outlet />
-                </main>
-            </div>
+            {/* <Menu /> */}
+            <main className="container">
+                <Outlet />
+            </main>
         </>
     );
 };

@@ -1,10 +1,11 @@
+import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Menu = () => {
     return (
         <>
             <Link to="/">
-                <div className="ps-2 fw-bold">Dashboard</div>
+                <Button className="">Dashboard</Button>
             </Link>
         </>
     );
