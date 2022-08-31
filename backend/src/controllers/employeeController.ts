@@ -19,10 +19,9 @@ export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) =
 };
 
 export const createEmployee = async (req: Request, res: Response) => {
-    const { name, surname, address, phone, email, birthdate } = req.body;
-    console.log(name);
+    const { name, surname, address, phone, email, birth } = req.body;
 
-    Employee.create({ name, surname, address, phone, email, birthdate });
+    Employee.create({ name, surname, address, phone, email, birth });
 
     res.status(201).json({ msg: "Created" });
 };

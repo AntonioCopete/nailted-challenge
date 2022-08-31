@@ -13,4 +13,9 @@ export default {
         const res = await axiosClient.post("/employees", employee);
         return res;
     },
+
+    fetchEmployee: async (employeeId: number) => {
+        const res = await axiosClient.get(`/employees/${employeeId}`);
+        return res;
+    },
 };

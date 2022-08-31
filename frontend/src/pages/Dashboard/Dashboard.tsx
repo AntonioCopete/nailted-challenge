@@ -2,23 +2,18 @@ import { useEffect, useState } from "react";
 import { Button, Form, Modal, Pagination } from "react-bootstrap";
 import api from "../../api/api";
 import Table from "../../components/Table/Table";
-import Employee from "../../interfaces/Employee";
+import IEmployee from "../../interfaces/Employee";
 
 const Home = () => {
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [employees, setEmployees] = useState<IEmployee[]>([]);
     const [pages, setPages] = useState<Number[]>([]);
     const [showModal, setShowModal] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState<string | null>(null);
     const [sort, setSort] = useState<string | null>(null);
-    // useEffect(() => {
-    //     loadEmployees();
-    // }, []);
 
     useEffect(() => {
-        console.log("CHANGE");
-
         loadEmployees(currentPage, search, sort);
     }, [currentPage, search, sort]);
 
@@ -41,18 +36,24 @@ const Home = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        const employeeData: Employee = {
+        const birthDate = new Date(e.target.birth.value);
+        const formattedBirth = `${birthDate.getMonth() + 1}/${birthDate.getDate()}/${birthDate.getFullYear()}`;
+
+        const employeeData: IEmployee = {
             name: e.target.name.value,
             surname: e.target.surname.value,
             address: e.target.address.value,
             email: e.target.email.value,
-            birth: e.target.birth.value,
+            birth: formattedBirth,
             phone: e.target.phone.value,
         };
 
         const res = await api.createEmployee(employeeData);
 
-        if (res?.status === 201) loadEmployees();
+        if (res?.status === 201) {
+            loadEmployees(currentPage, search, sort);
+            setShowModal(false);
+        }
     };
 
     const handlePage = (e: any) => {
@@ -104,10 +105,9 @@ const Home = () => {
                         </div>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer></Modal.Footer>
             </Modal>
 
-            {employees.length > 0 && (
+            {
                 <>
                     <div className="row justify-content-between my-2">
                         <div className="col-5">
@@ -134,23 +134,33 @@ const Home = () => {
                             </Button>
                         </div>
                     </div>
-                    <Table
-                        columns={Object.keys(employees[0])}
-                        rows={employees.map((employeePropValues: Employee) => Object.values(employeePropValues))}
-                    />
-                    <div className="d-flex justify-content-center">
-                        <Pagination>
-                            {pages.map((page, idx) => {
-                                return (
-                                    <Pagination.Item active={currentPage === idx + 1} onClick={handlePage} key={idx}>
-                                        {page.toString()}
-                                    </Pagination.Item>
-                                );
-                            })}
-                        </Pagination>
-                    </div>
+                    {employees.length > 0 && (
+                        <>
+                            <Table
+                                columns={Object.keys(employees[0])}
+                                rows={employees.map((employeePropValues: IEmployee) =>
+                                    Object.values(employeePropValues)
+                                )}
+                            />
+                            <div className="d-flex justify-content-center">
+                                <Pagination>
+                                    {pages.map((page, idx) => {
+                                        return (
+                                            <Pagination.Item
+                                                active={currentPage === idx + 1}
+                                                onClick={handlePage}
+                                                key={idx}
+                                            >
+                                                {page.toString()}
+                                            </Pagination.Item>
+                                        );
+                                    })}
+                                </Pagination>
+                            </div>
+                        </>
+                    )}
                 </>
-            )}
+            }
         </>
     );
 };

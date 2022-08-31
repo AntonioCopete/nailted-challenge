@@ -6,11 +6,11 @@ interface IEmployee {
     address?: string;
     phone?: string;
     email: string;
-    birthdate?: string;
+    birth?: string;
 }
 
 const Employee = {
-    create: function ({ name, surname, address, phone, email, birthdate }: IEmployee) {
+    create: function ({ name, surname, address, phone, email, birth }: IEmployee) {
         // Getting the last employee id to create an employee with the next id
         const file = fs.readFileSync("./src/db/employees.txt");
         const textLines = file.toString().split("\n");
@@ -25,7 +25,7 @@ const Employee = {
             address: '"' + address + '"',
             phone: phone?.slice(0, 3) + "-" + phone?.slice(3, 6) + "-" + phone?.slice(6),
             email,
-            birthdate,
+            birth,
         };
         const stringEmployee: string = Object.values(newEmployee).join(",");
 
@@ -35,15 +35,16 @@ const Employee = {
         let employees: IEmployee[] = this.findAll();
 
         if (filter) {
-            employees = employees.filter((employee: IEmployee) => employee.email.includes(filter));
+            employees = employees.filter((employee: IEmployee) =>
+                employee.email.toLowerCase().includes(filter.toLowerCase())
+            );
         }
 
         if (sort === "name" || sort === "surname") {
             employees.sort((a: IEmployee, b: IEmployee) => a[sort].localeCompare(b[sort]));
         }
 
-        const pages = Math.trunc(employees.length / 5);
-
+        const pages = employees.length % 5 === 0 ? employees.length / 5 : Math.trunc(employees.length / 5) + 1;
         employees = employees.slice(parseInt(page) * 5 - 5, parseInt(page) * 5);
 
         return { employees, pages };
@@ -52,18 +53,20 @@ const Employee = {
     findById: function (id: string) {
         const fileArr = fs.readFileSync("./src/db/employees.txt").toString().split("\n");
 
-        const foundLine = fileArr.find((fileLine: any) => fileLine.slice(0, id.length) === id);
+        const foundLine = fileArr.find((fileLine: any) => fileLine.slice(0, id.length + 1) === id + ",");
+        console.log(foundLine);
 
         if (foundLine) {
-            const [id, name, surname, address, phone, email, birthdate] = foundLine;
+            const employeeArr = foundLine.split(",");
+            const [id, name, surname, address, phone, email, birth] = employeeArr;
             return {
                 id,
                 name,
                 surname,
                 address: address.slice(1, address.length - 1),
                 phone,
-                email: email.toLowerCase(),
-                birthdate,
+                email: email,
+                birth,
             };
         } else {
             return false;
@@ -79,13 +82,13 @@ const Employee = {
             .map((textLine: string) => {
                 const employeeLine = textLine.split(",");
 
-                const [id, name, surname, address, phone, email, birthdate] = employeeLine;
+                const [id, name, surname, address, phone, email, birth] = employeeLine;
 
                 return {
                     id,
                     name,
                     surname,
-                    email: email.toLowerCase(),
+                    email: email,
                 };
             });
     },
