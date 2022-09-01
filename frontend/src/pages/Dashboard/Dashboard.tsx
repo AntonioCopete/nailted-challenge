@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import { Button, Form, Modal, Pagination } from "react-bootstrap";
 import api from "../../api/api";
 import Table from "../../components/Table/Table";
@@ -56,17 +56,19 @@ const Home = () => {
         }
     };
 
-    const handlePage = (e: any) => {
-        setCurrentPage(parseInt(e.target.textContent));
+    const handlePage = (e: MouseEvent) => {
+        const textContent = (e.target as HTMLElement)?.textContent;
+
+        if (textContent) setCurrentPage(parseInt(textContent));
     };
 
-    const handleSearch = (e: any) => {
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) {
             setSearch(e.target.value);
             setCurrentPage(1);
         }
     };
-    const handleSort = (e: any) => {
+    const handleSort = (e: ChangeEvent<HTMLSelectElement>) => {
         if (e.target.value === "name" || e.target.value === "surname") {
             setSort(e.target.value);
             setCurrentPage(1);
@@ -89,14 +91,7 @@ const Home = () => {
                         <Form.Control type="text" id="address" placeholder="Employee address" required />
                         <Form.Control type="email" id="email" placeholder="Employee email" required />
                         <Form.Control type="date" id="birth" placeholder="Employee birth date" required />
-                        <Form.Control
-                            type="tel"
-                            id="phone"
-                            placeholder="Employee phone"
-                            minLength={10}
-                            maxLength={10}
-                            required
-                        />
+                        <Form.Control type="tel" id="phone" placeholder="Employee phone" minLength={10} maxLength={10} required />
                         <div className="d-flex justify-content-end gap-3">
                             <Button variant="secondary">Cancel</Button>
                             <Button variant="success" type="submit">
@@ -111,12 +106,7 @@ const Home = () => {
                 <>
                     <div className="row justify-content-between my-2">
                         <div className="col-5">
-                            <Form.Control
-                                onChange={handleSearch}
-                                type="text"
-                                id="search-email"
-                                placeholder="Search email"
-                            />
+                            <Form.Control onChange={handleSearch} type="text" id="search-email" placeholder="Search email" />
                         </div>
                         <div className="col-5">
                             <Form.Select onChange={handleSort} id="filter" defaultValue="title">
@@ -138,19 +128,13 @@ const Home = () => {
                         <>
                             <Table
                                 columns={Object.keys(employees[0])}
-                                rows={employees.map((employeePropValues: IEmployee) =>
-                                    Object.values(employeePropValues)
-                                )}
+                                rows={employees.map((employeePropValues: IEmployee) => Object.values(employeePropValues))}
                             />
                             <div className="d-flex justify-content-center">
                                 <Pagination>
                                     {pages.map((page, idx) => {
                                         return (
-                                            <Pagination.Item
-                                                active={currentPage === idx + 1}
-                                                onClick={handlePage}
-                                                key={idx}
-                                            >
+                                            <Pagination.Item active={currentPage === idx + 1} onClick={handlePage} key={idx}>
                                                 {page.toString()}
                                             </Pagination.Item>
                                         );

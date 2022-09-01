@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Employee from "../models/Employee";
 import { Query } from "express-serve-static-core";
+import IEmployee from "../interfaces/Employee";
 
 interface IRequest<T extends Query> extends Request {
     query: T;
@@ -11,23 +12,38 @@ interface IQueryParams {
 }
 
 export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) => {
-    const { page, sort, filter } = req.query;
+    try {
+        const { page, sort, filter } = req.query;
 
-    const { employees, pages } = Employee.find(page, sort, filter);
+        const foundEmployees = Employee.find(page, sort, filter);
 
-    return res.status(200).json({ employees, pages });
+        return res.status(200).json({ employees: foundEmployees.employees, pages: foundEmployees.pages });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Unexpected error" });
+    }
 };
 
 export const createEmployee = async (req: Request, res: Response) => {
-    const { name, surname, address, phone, email, birth } = req.body;
+    try {
+        const { name, surname, address, phone, email, birth } = req.body;
 
-    Employee.create({ name, surname, address, phone, email, birth });
+        Employee.create({ name, surname, address, phone, email, birth });
 
-    res.status(201).json({ msg: "Created" });
+        return res.status(201).json({ msg: "Created" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Unexpected error" });
+    }
 };
 
 export const getEmployeeById = async (req: Request, res: Response) => {
-    const employee = Employee.findById(req.params.id);
+    try {
+        const employee = Employee.findById(req.params.id);
 
-    return res.status(200).json({ employee });
+        return res.status(200).json({ employee });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Unexpected error" });
+    }
 };

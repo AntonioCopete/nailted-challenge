@@ -1,13 +1,5 @@
 import fs from "fs";
-interface IEmployee {
-    id?: string;
-    name: string;
-    surname: string;
-    address?: string;
-    phone?: string;
-    email: string;
-    birth?: string;
-}
+import IEmployee from "../interfaces/Employee";
 
 const Employee = {
     create: function ({ name, surname, address, phone, email, birth }: IEmployee) {
@@ -29,23 +21,50 @@ const Employee = {
         };
         const stringEmployee: string = Object.values(newEmployee).join(",");
 
+        // Save employee in DB's next line
         fs.appendFileSync("./src/db/employees.txt", "\n" + stringEmployee);
     },
     find: function (page: string = "1", sort: string, filter: string) {
-        let employees: IEmployee[] = this.findAll();
+        const file = fs.readFileSync("./src/db/employees.txt");
 
+        // Get every employee text line from DB
+        let employeesText: string[] = file.toString().split("\n");
+
+        // If we are using any email filter, filter DB employee lines wich contains the e-mail
         if (filter) {
-            employees = employees.filter((employee: IEmployee) =>
-                employee.email.toLowerCase().includes(filter.toLowerCase())
-            );
+            employeesText = employeesText.filter((employee: string) => employee.toLowerCase().includes(filter.toLowerCase()));
         }
 
+        // Sort employee lines by name (2nd property in DB) or surname (3rd property in DB)
         if (sort === "name" || sort === "surname") {
-            employees.sort((a: IEmployee, b: IEmployee) => a[sort].localeCompare(b[sort]));
+            employeesText.sort((a: string, b: string) => {
+                const [aId, aName, aSurname] = a.split(",");
+                const [bId, bName, bSurname] = b.split(",");
+
+                if (sort === "name") {
+                    return aName.localeCompare(bName);
+                } else {
+                    return aSurname.localeCompare(bSurname);
+                }
+            });
         }
 
-        const pages = employees.length % 5 === 0 ? employees.length / 5 : Math.trunc(employees.length / 5) + 1;
-        employees = employees.slice(parseInt(page) * 5 - 5, parseInt(page) * 5);
+        // Calculate number of pages needed to show employees if we are showing 5 employees per page
+        const pages = employeesText.length % 5 === 0 ? employeesText.length / 5 : Math.trunc(employeesText.length / 5) + 1;
+
+        // Get only 5 results per page
+        employeesText = employeesText.slice(parseInt(page) * 5 - 5, parseInt(page) * 5);
+
+        // Parse text data from DB to JSON
+        const employees: IEmployee[] = employeesText.map((employee: string) => {
+            const [id, name, surname, address, phone, email, birth] = employee.split(",");
+            return {
+                id,
+                name,
+                surname,
+                email: email,
+            };
+        });
 
         return { employees, pages };
     },
@@ -53,8 +72,7 @@ const Employee = {
     findById: function (id: string) {
         const fileArr = fs.readFileSync("./src/db/employees.txt").toString().split("\n");
 
-        const foundLine = fileArr.find((fileLine: any) => fileLine.slice(0, id.length + 1) === id + ",");
-        console.log(foundLine);
+        const foundLine = fileArr.find((fileLine: string) => fileLine.slice(0, id.length + 1) === id + ",");
 
         if (foundLine) {
             const employeeArr = foundLine.split(",");
@@ -71,26 +89,6 @@ const Employee = {
         } else {
             return false;
         }
-    },
-
-    findAll: function () {
-        const file = fs.readFileSync("./src/db/employees.txt");
-
-        return file
-            .toString()
-            .split("\n")
-            .map((textLine: string) => {
-                const employeeLine = textLine.split(",");
-
-                const [id, name, surname, address, phone, email, birth] = employeeLine;
-
-                return {
-                    id,
-                    name,
-                    surname,
-                    email: email,
-                };
-            });
     },
 };
 

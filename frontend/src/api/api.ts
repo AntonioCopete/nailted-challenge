@@ -1,3 +1,4 @@
+import IEmployee from "../interfaces/Employee";
 import axiosClient from "../services/axios";
 
 export default {
@@ -9,7 +10,7 @@ export default {
         return res;
     },
 
-    createEmployee: async (employee: any) => {
+    createEmployee: async (employee: IEmployee) => {
         const res = await axiosClient.post("/employees", employee);
         return res;
     },

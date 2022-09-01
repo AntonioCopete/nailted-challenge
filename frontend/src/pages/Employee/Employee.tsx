@@ -7,6 +7,7 @@ import IEmployee from "../../interfaces/Employee";
 const Employee = () => {
     const { employeeId } = useParams();
     const [employee, setEmployee] = useState<IEmployee>();
+
     useEffect(() => {
         loadEmployee();
     }, []);
@@ -14,21 +15,18 @@ const Employee = () => {
     const loadEmployee = async () => {
         if (employeeId) {
             const res = await api.fetchEmployee(parseInt(employeeId));
-            console.log(res.data);
 
             if (res.status === 200) setEmployee(res.data.employee);
         }
     };
     return (
         <>
-            <div>
-                <Link to={"/"}>
-                    <Button variant="secondary" className="my-4">
-                        Back
-                    </Button>
-                </Link>
-            </div>
-            <div className="d-flex">
+            <Link to={"/"}>
+                <Button variant="secondary" className="my-4">
+                    Back
+                </Button>
+            </Link>
+            <>
                 {employee && (
                     <Card className="align-self-center w-100">
                         <Card.Body>
@@ -53,7 +51,7 @@ const Employee = () => {
                         </Card.Body>
                     </Card>
                 )}
-            </div>
+            </>
         </>
     );
 };
