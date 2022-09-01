@@ -20,7 +20,7 @@ export const getEmployees = (req: IRequest<IQueryParams>, res: Response) => {
         return res.status(200).json({ employees: foundEmployees.employees, pages: foundEmployees.pages });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "Unexpected error" });
+        return res.status(500).json({ msg: "Unexpected error" });
     }
 };
 
@@ -33,17 +33,17 @@ export const createEmployee = (req: Request, res: Response) => {
         return res.status(201).json({ msg: "Created" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "Unexpected error" });
+        return res.status(500).json({ msg: "Unexpected error" });
     }
 };
 
 export const getEmployeeById = (req: Request, res: Response) => {
     try {
         const foundEmployee = Employee.findById(req.params.id);
-
-        return res.status(200).json({ foundEmployee });
+        if (foundEmployee) return res.status(200).json({ foundEmployee });
+        return res.status(400).json({ msg: "Employee not found" });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ msg: "Unexpected error" });
+        return res.status(500).json({ msg: "Unexpected error" });
     }
 };
