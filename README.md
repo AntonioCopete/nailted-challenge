@@ -1,28 +1,83 @@
-# nailted-challenge
 
-Javascript developer challenge
-The company has all the employee’s information in a .txt file and they want to create a small
-SPA that consumes an API that makes the .txt easy to read.
+# 👩‍💻 Nailted Challenge
 
-In order to do that they want to implement the next actions:
+Development of an API Rest and UI to consume data from employees stored in a .txt file using Typescript and Node.js
 
--   It should be possible to list all the employees: It should have pagination, sort by name and
-    surname and filter by email.
--   It should be possible to create a new employee.
--   It should be possible to see only one employee.
-    All actions must be implemented in the backend. The backend will use the .txt file as a
-    database.
 
-    Requirements:
 
--   The server side should be done in node.js.
--   Typescript should be used.
--   Choose in both (backend and frontend) the frameworks you feel more comfortable.
-    Considerations:
--   Try to have a good and clean architecture.
--   We will not focus on if the solution “just works”, we will focus on your approach, how
-    do you slice the problems and solve the challenge.
-    You can share a git repository with us, or share the project in the way you prefer.
+## 🧠 Description
+I'm going to explain some details about how I developed the project.
 
-The file attached follows the next format: id, name surname, address, phone, email,
-birthdate.
+### Priorities
+- Fast queries: I tried to priorize fast DB data queries, reading and creating the text file before parsing the data to JSON else I would need to iterate every element to parse the data and filter it after.
+
+- Development priorities: To have enough time to work in the app logic I decided to create the UI faster, using a framework for css (Bootstrap) and a component library (React-Bootstrap).
+
+- Data security: I used a validation middleware in the API for employee data coming from client in the endpoint for create a new employee. For example excluding "," in any field, since commas allow us to identify different employee properties
+
+### Endpoints
+#### Get employees
+```bash
+GET / localhost:4000/api/v1/employees?page={page}&sort={sort}&filter={filter}
+```
+- page: page number to show
+- sort: "name" or "surname" values will sort employees by name or surname in ascending order
+- filter: string value to filter employees by e-mail
+
+#### Get employee by id
+```bash
+GET / localhost:4000/api/v1/employees/{employeeId}
+```
+
+#### Create employee
+```bash
+POST / localhost:4000/api/v1/employees
+```
+- The request body contains the next employee properties: name, surname, address, email, birth(date) and phone
+
+
+
+
+## ⚡️ Installation
+- Need Node.js and NPM
+
+Clone the repository.
+
+```bash
+git clone https://github.com/AntonioCopete/nailted-challenge.git <folder-name>/.
+
+```
+
+
+Execute the next commands in "backend" folder to install the backend libraries used in this project and run the API server: 
+
+-  ``` npm install ```
+
+-  ``` npm run dev ```
+
+
+Execute the next commands in "frontend" folder to install the frontend libraries used in this project and run the client server: 
+
+-  ``` npm install ```
+
+-  ``` npm start ```
+
+
+You can interact with the app using your web browser (http://localhost:3000/)
+
+
+
+
+## 🛠 Teck stack
+- HTML5
+- CSS
+- Bootstrap
+- React-Bootstrap
+- React.js
+- Node.js
+
+
+## 💬 Author
+
+- [@AntonioCopete](https://www.github.com/AntonioCopete)
+
