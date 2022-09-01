@@ -26,7 +26,7 @@ export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) =
 
 export const createEmployee = async (req: Request, res: Response) => {
     try {
-        const { name, surname, address, phone, email, birth } = req.body;
+        const { name, surname, address, phone, email, birth }: IEmployee = req.body;
 
         Employee.create({ name, surname, address, phone, email, birth });
 

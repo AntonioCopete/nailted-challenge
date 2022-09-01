@@ -13,12 +13,18 @@ const Home = () => {
     const [search, setSearch] = useState<string | null>(null);
     const [sort, setSort] = useState<string | null>(null);
 
+    const [formError, setFormError] = useState<any>();
+
+    // Fetching employees when page, search or sort changes
     useEffect(() => {
         loadEmployees(currentPage, search, sort);
     }, [currentPage, search, sort]);
 
+    // Fetch employees and number of pages needed to show all employees
     const loadEmployees = async (page: number = 1, search: string | null = null, sort: string | null = null) => {
         const res = await api.fetchEmployees(page, search, sort);
+
+        console.log(res);
 
         if (res?.status === 200) {
             setEmployees(res.data.employees);
@@ -53,6 +59,10 @@ const Home = () => {
         if (res?.status === 201) {
             loadEmployees(currentPage, search, sort);
             setShowModal(false);
+        } else if (res?.status === 400) {
+            console.log(res);
+
+            setFormError(res.data);
         }
     };
 
@@ -92,8 +102,19 @@ const Home = () => {
                         <Form.Control type="email" id="email" placeholder="Employee email" required />
                         <Form.Control type="date" id="birth" placeholder="Employee birth date" required />
                         <Form.Control type="tel" id="phone" placeholder="Employee phone" minLength={10} maxLength={10} required />
+                        {formError && (
+                            <div className="mt-2">
+                                <p className="text-danger fw-bold">{formError.msg}</p>{" "}
+                                {formError.errors.map((error: string) => (
+                                    <p className="text-danger">- {error}</p>
+                                ))}
+                            </div>
+                        )}
+
                         <div className="d-flex justify-content-end gap-3">
-                            <Button variant="secondary">Cancel</Button>
+                            <Button variant="secondary" onClick={() => setShowModal(false)}>
+                                Cancel
+                            </Button>
                             <Button variant="success" type="submit">
                                 Submit
                             </Button>
@@ -118,6 +139,7 @@ const Home = () => {
                                 <option value="surname">Surname</option>
                             </Form.Select>
                         </div>
+
                         <div className="col-1 d-flex justify-content-end">
                             <Button variant="success" onClick={() => setShowModal(true)}>
                                 Add
