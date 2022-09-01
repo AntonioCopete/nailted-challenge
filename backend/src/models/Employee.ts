@@ -30,9 +30,9 @@ const Employee = {
         // Get every employee text line from DB
         let employeesText: string[] = file.toString().split("\n");
 
-        // If we are using any email filter, filter DB employee lines wich contains the e-mail
+        // If we are using any email filter, filter DB employee wich contains the e-mail
         if (filter) {
-            employeesText = employeesText.filter((employee: string) => employee.toLowerCase().includes(filter.toLowerCase()));
+            employeesText = employeesText.filter((employee: string) => employee.split(",")[5].toLowerCase().includes(filter.toLowerCase()));
         }
 
         // Sort employee lines by name (2nd property in DB) or surname (3rd property in DB)

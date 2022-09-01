@@ -13,15 +13,13 @@ export const validNewEmployee: RequestHandler = async (req, res, next) => {
     if (foundEmployees.employees.length > 0) {
         errors.push("E-mail already exists");
     }
+    console.log(employeeValues[0]);
+
     if (
-        employeeValues.includes(",") ||
-        employeeValues.includes("\n") ||
-        name.includes("@") ||
-        surname.includes("@") ||
-        address?.includes("@") ||
-        phone?.includes("@") ||
-        email?.includes("@") ||
-        birth?.includes("@")
+        employeeValues.filter(
+            (employeeValue: any, idx: number) =>
+                employeeValue.includes(",") || employeeValue.includes("\n") || (idx !== 3 && employeeValue.includes("@"))
+        ).length > 0
     ) {
         errors.push("Inputs shoudldn't include special characters");
     }

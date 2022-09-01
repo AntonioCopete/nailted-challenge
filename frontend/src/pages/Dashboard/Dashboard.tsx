@@ -24,8 +24,6 @@ const Home = () => {
     const loadEmployees = async (page: number = 1, search: string | null = null, sort: string | null = null) => {
         const res = await api.fetchEmployees(page, search, sort);
 
-        console.log(res);
-
         if (res?.status === 200) {
             setEmployees(res.data.employees);
 
@@ -60,8 +58,6 @@ const Home = () => {
             loadEmployees(currentPage, search, sort);
             setShowModal(false);
         } else if (res?.status === 400) {
-            console.log(res);
-
             setFormError(res.data);
         }
     };
