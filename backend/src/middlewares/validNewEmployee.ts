@@ -1,12 +1,9 @@
 import { RequestHandler } from "express";
-import IEmployee from "../interfaces/Employee";
 import Employee from "../models/Employee";
 
 export const validNewEmployee: RequestHandler = async (req, res, next) => {
-    const { name, surname, address, phone, email, birth }: IEmployee = req.body;
-
     const employeeValues = Object.values(req.body);
-    const foundEmployees = Employee.find("1", "", email);
+    const foundEmployees = Employee.find("1", "", req.body.email);
 
     const errors = [];
 

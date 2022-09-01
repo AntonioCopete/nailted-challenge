@@ -39,9 +39,9 @@ export const createEmployee = async (req: Request, res: Response) => {
 
 export const getEmployeeById = async (req: Request, res: Response) => {
     try {
-        const employee = Employee.findById(req.params.id);
+        const foundEmployee = Employee.findById(req.params.id);
 
-        return res.status(200).json({ employee });
+        return res.status(200).json({ foundEmployee });
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: "Unexpected error" });
