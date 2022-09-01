@@ -1,8 +1,8 @@
 import fs from "fs";
 import IEmployee from "../interfaces/Employee";
 
-class Employee {
-    create({ name, surname, address, phone, email, birth }: IEmployee) {
+const Employee = {
+    create: ({ name, surname, address, phone, email, birth }: IEmployee) => {
         // Getting the last employee id to create an employee with the next id
         const file = fs.readFileSync("./src/db/employees.txt");
         const textLines = file.toString().split("\n");
@@ -23,9 +23,8 @@ class Employee {
 
         // Save employee in DB's next line
         fs.appendFileSync("./src/db/employees.txt", "\n" + stringEmployee);
-    }
-
-    find(page: string = "1", sort: string, filter: string) {
+    },
+    find: (page: string = "1", sort: string, filter: string) => {
         const file = fs.readFileSync("./src/db/employees.txt");
 
         // Get every employee text line from DB
@@ -68,9 +67,9 @@ class Employee {
         });
 
         return { employees, pages };
-    }
+    },
 
-    findById(id: string) {
+    findById: (id: string) => {
         const fileArr = fs.readFileSync("./src/db/employees.txt").toString().split("\n");
 
         const foundLine = fileArr.find((fileLine: string) => fileLine.slice(0, id.length + 1) === id + ",");
@@ -90,7 +89,7 @@ class Employee {
         } else {
             return false;
         }
-    }
-}
+    },
+};
 
-export default new Employee();
+export default Employee;

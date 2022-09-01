@@ -11,7 +11,7 @@ interface IQueryParams {
     [index: string]: string;
 }
 
-export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) => {
+export const getEmployees = (req: IRequest<IQueryParams>, res: Response) => {
     try {
         const { page, sort, filter } = req.query;
 
@@ -24,7 +24,7 @@ export const getEmployees = async (req: IRequest<IQueryParams>, res: Response) =
     }
 };
 
-export const createEmployee = async (req: Request, res: Response) => {
+export const createEmployee = (req: Request, res: Response) => {
     try {
         const { name, surname, address, phone, email, birth }: IEmployee = req.body;
 
@@ -37,7 +37,7 @@ export const createEmployee = async (req: Request, res: Response) => {
     }
 };
 
-export const getEmployeeById = async (req: Request, res: Response) => {
+export const getEmployeeById = (req: Request, res: Response) => {
     try {
         const foundEmployee = Employee.findById(req.params.id);
 
