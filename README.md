@@ -9,9 +9,9 @@ Development of an API Rest and UI to consume data from employees stored in a .tx
 I'm going to explain some details about how I developed the project.
 
 ### Priorities
-- Fast queries: I tried to priorize fast DB data queries, reading and creating the text file before parsing the data to JSON else I would need to iterate every element to parse the data and filter it after.
+- Fast queries: I tried to priorize fast DB data queries, reading or writing in the text file before parsing the data to JSON or I would need to iterate every element to parse the data and filter it after.
 
-- Development priorities: To have enough time to work in the app logic I decided to create the UI faster, using a framework for css (Bootstrap) and a component library (React-Bootstrap).
+- Time management: In order to have enough time to work in the app logic I decided to build the UI faster, using a framework for css (Bootstrap) and a component library (React-Bootstrap).
 
 - Data security: I used a validation middleware in the API for employee data coming from client in the endpoint for create a new employee. For example excluding "," in any field, since commas allow us to identify different employee properties
 
